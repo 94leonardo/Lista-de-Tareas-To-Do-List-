@@ -1,10 +1,24 @@
-// App.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 
 function App() {
   const [todos, setTodos] = useState([]); // Arreglo de tareas
+
+  // Cargar las tareas desde localStorage al inicio
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos")
+      ? JSON.parse(localStorage.getItem("todos"))
+      : [];
+    setTodos(storedTodos);
+  }, []);
+
+  // Guardar las tareas en localStorage cuando cambien
+  useEffect(() => {
+    if (todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }, [todos]);
 
   const addTodo = (text) => {
     setTodos([...todos, { text, completed: false }]);
@@ -13,10 +27,11 @@ function App() {
   const deleteTodo = (index) => {
     setTodos(todos.filter((_, i) => i !== index));
   };
+
   const toggleCompleted = (index) => {
     setTodos(
       todos.map((todo, i) =>
-        i === index ? { ...todos, completed: !todos.completed } : todo
+        i === index ? { ...todo, completed: !todo.completed } : todo
       )
     );
   };
