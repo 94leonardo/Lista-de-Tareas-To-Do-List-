@@ -1,38 +1,94 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .App {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  color: #333;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.todo-input {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.todo-input input {
+  width: 75%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.todo-input button {
+  padding: 10px;
+  background-color: #28a745;
   color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.todo-input button:hover {
+  background-color: #218838;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.todo-list {
+  list-style: none;
+  padding: 0;
 }
+
+.todo-item {
+    display: flex; /* Usamos flexbox para crear un contenedor flexible */
+    justify-content: space-between; /* Coloca el texto a la izquierda y los botones a la derecha */
+    align-items: center; /* Alinea verticalmente el contenido */
+    padding: 10px;
+    border-bottom: 1px solid #ccc; /* Añade una línea separadora entre items */
+  }
+  .todo-item span {
+    flex-grow: 1; /* El texto de la tarea ocupará todo el espacio disponible */
+    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
+  }
+
+.todo-item.completed {
+  text-decoration: line-through;
+  opacity: 0.4;
+}
+
+.todo-item button {
+    margin-left: 10px; /* Añade espacio entre los botones */
+    padding: 5px 10px;
+    background-color: #ff0505;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+  .todo-item button:hover {
+    background-color: #f74242; /* Efecto hover para los botones */
+  }
+.todo-item .edit {
+  background-color: #007bff;
+  margin-right: 10px;
+  
+}
+
+.todo-item .edit:hover {
+  background-color: #0056b3;
+}
+.todo-item div {
+    display: flex; /* Flexbox para organizar los botones */
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+  }

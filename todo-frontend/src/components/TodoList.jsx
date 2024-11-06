@@ -3,7 +3,7 @@ import TodoItem from "./TodoItem";
 
 function TodoList({ todos, onToggleComplete, onDelete, onUpdate }) {
   return (
-    <ul>
+    <ul className="todo-list">
       {todos.map((todo, index) => (
         <TodoItem
           key={index}

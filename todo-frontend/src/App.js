@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 
+import "./App.css";
+
 function App() {
   const [todos, setTodos] = useState([]); // Arreglo de tareas
 

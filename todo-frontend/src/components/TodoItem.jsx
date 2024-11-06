@@ -2,16 +2,26 @@ import React, { useState } from "react";
 
 function TodoItem({ todo, onToggleComplete, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [newText, setNewText] = useState(todo.text);
+  const [newText, setNewText] = useState(todo?.text || ""); // Manejar caso en el que 'todo' sea indefinido
+
   const handleEdit = () => {
     setIsEditing(true);
   };
+
   const handleUpdate = () => {
-    onUpdate(newText);
-    setIsEditing(false);
+    if (newText.trim()) { // Validar que el nuevo texto no esté vacío
+      onUpdate(newText);
+      setIsEditing(false);
+    }
   };
+
+  // Si 'todo' no está definido, no renderizar el componente
+  if (!todo) {
+    return null;
+  }
+
   return (
-    <li style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
+    <li className={`todo-item ${todo.completed ? "completed" : ""}`}>
       {isEditing ? (
         <>
           <input
@@ -26,8 +36,8 @@ function TodoItem({ todo, onToggleComplete, onDelete, onUpdate }) {
           <span onClick={onToggleComplete} style={{ cursor: "pointer" }}>
             {todo.text}
           </span>
-          <button onClick={handleEdit}>Editar</button>
-          <button onClick={onDelete}>Eliminar</button>
+          <button className="edit" onClick={handleEdit}>Editar</button>
+          <button className="delete" onClick={onDelete}>Eliminar</button>
         </>
       )}
     </li>
