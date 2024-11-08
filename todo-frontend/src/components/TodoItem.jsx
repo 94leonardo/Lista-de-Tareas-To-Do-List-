@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, InputGroup, FormControl, ListGroup } from "react-bootstrap";
 
 function TodoItem({ todo, onToggleComplete, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,26 +22,45 @@ function TodoItem({ todo, onToggleComplete, onDelete, onUpdate }) {
   }
 
   return (
-    <li className={`todo-item ${todo.completed ? "completed" : ""}`}>
+    <ListGroup.Item className="d-flex justify-content-between align-items-center">
       {isEditing ? (
-        <>
-          <input
+        <InputGroup>
+          <FormControl
             type="text"
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
           />
-          <button onClick={handleUpdate}>Actualizar</button>
-        </>
+          <Button variant="success" onClick={handleUpdate}>
+            Guardar
+          </Button>
+        </InputGroup>
       ) : (
         <>
-          <span onClick={onToggleComplete} style={{ cursor: "pointer" }}>
+          <span
+            onClick={onToggleComplete}
+            style={{
+              cursor: "pointer",
+              textDecoration: todo.completed ? "line-through" : "none",
+            }}
+          >
             {todo.text}
           </span>
-          <button className="edit" onClick={handleEdit}>Editar</button>
-          <button className="delete" onClick={onDelete}>Eliminar</button>
+          <div>
+            <Button variant="outline-primary" size="sm" onClick={handleEdit}>
+              Editar
+            </Button>
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={onDelete}
+              className="ms-2"
+            >
+              Eliminar
+            </Button>
+          </div>
         </>
       )}
-    </li>
+    </ListGroup.Item>
   );
 }
 

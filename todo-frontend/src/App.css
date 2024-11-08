@@ -1,94 +1,118 @@
+/* App.css */
+
+/* Estilo global */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  background-color: #f8f9fa; /* Fondo claro de Bootstrap */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App {
-  background-color: white;
-  border-radius: 10px;
+/* Contenedor principal */
+.container {
+  max-width: 600px;
+  margin-top: 50px;
   padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  text-align: center;
-}
-h1 {
-  color: #333;
 }
 
-.todo-input {
-  display: flex;
-  justify-content: space-between;
+/* Título */
+h1 {
+  text-align: center;
+  color: #37424d; /* Color oscuro de Bootstrap */
   margin-bottom: 20px;
 }
 
+/* Estilo del formulario de entrada */
+.todo-input {
+  display: flex;
+  gap: 10px;
+}
+
 .todo-input input {
-  width: 75%;
+  flex: 1;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da; /* Borde claro de Bootstrap */
 }
 
 .todo-input button {
-  padding: 10px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  width: 120px;
 }
 
-.todo-input button:hover {
-  background-color: #218838;
-}
-
+/* Lista de tareas */
 .todo-list {
   list-style: none;
   padding: 0;
 }
 
 .todo-item {
-    display: flex; /* Usamos flexbox para crear un contenedor flexible */
-    justify-content: space-between; /* Coloca el texto a la izquierda y los botones a la derecha */
-    align-items: center; /* Alinea verticalmente el contenido */
-    padding: 10px;
-    border-bottom: 1px solid #ccc; /* Añade una línea separadora entre items */
-  }
-  .todo-item span {
-    flex-grow: 1; /* El texto de la tarea ocupará todo el espacio disponible */
-    text-align: left; /* Asegura que el texto esté alineado a la izquierda */
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6; /* Borde claro para separar elementos */
+}
 
-.todo-item.completed {
+/* Texto de la tarea */
+.todo-item span {
+  cursor: pointer;
+}
+
+.todo-item.completed span {
   text-decoration: line-through;
-  opacity: 0.4;
+  color: #6c757d; /* Texto deshabilitado de Bootstrap */
 }
 
+/* Botones de acción */
 .todo-item button {
-    margin-left: 10px; /* Añade espacio entre los botones */
-    padding: 5px 10px;
-    background-color: #ff0505;
-    border: 1px solid #ddd;
-    cursor: pointer;
-  }
-  .todo-item button:hover {
-    background-color: #f74242; /* Efecto hover para los botones */
-  }
-.todo-item .edit {
-  background-color: #007bff;
-  margin-right: 10px;
-  
+  margin-left: 10px;
 }
 
-.todo-item .edit:hover {
-  background-color: #0056b3;
+/* Botones de editar y eliminar */
+.button-edit {
+  color: #0d6efd; /* Azul de Bootstrap */
 }
-.todo-item div {
-    display: flex; /* Flexbox para organizar los botones */
-    justify-content: flex-end; /* Alinea los botones a la derecha */
-  }
+
+.button-delete {
+  color: #dc3545; /* Rojo de Bootstrap */
+}
+
+/* Botón de guardar cambios */
+.button-save {
+  color: #198754; /* Verde de Bootstrap */
+}
+
+/* Estilo del campo de edición */
+.edit-input {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+
+/* Animaciones */
+.todo-item-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.todo-item-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.todo-item-exit {
+  opacity: 1;
+}
+
+.todo-item-exit-active {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.todo-filter {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}

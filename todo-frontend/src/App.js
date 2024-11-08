@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
+import TodoFilter from "./components/TodoFilter";
+import { Container, Row, Col } from "react-bootstrap";
 
 import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState([]); // Arreglo de tareas
+  const [filter, setFilter] = useState("all");
 
   // Cargar las tareas desde localStorage al inicio
   useEffect(() => {
@@ -44,17 +47,33 @@ function App() {
     );
   };
 
+  const getFilteredTodos = () => {
+    if (filter === "completed") {
+      return todos.filter((todo) => todo.completed);
+    } else if (filter === "pending") {
+      return todos.filter((todo) => !todo.completed);
+    }
+    return todos;
+  };
+
   return (
-    <div className="App">
-      <h1>Lista de Tareas</h1>
-      <TodoInput onAddTodo={addTodo} />
-      <TodoList
-        todos={todos}
-        onToggleComplete={toggleCompleted}
-        onDelete={deleteTodo}
-        onUpdate={updateTodo}
-      />
-    </div>
+    <Container className="py-4">
+      <Row>
+        <Col md={6} className="mx-auto">
+          <h1 className="text-center mb-4">Lista de Tareas</h1>
+          <div className="mb-4">
+            <TodoInput onAddTodo={addTodo} />
+            <TodoFilter onFilterChange={setFilter} />
+          </div>
+          <TodoList
+            todos={getFilteredTodos()}
+            onToggleComplete={toggleCompleted}
+            onDelete={deleteTodo}
+            onUpdate={updateTodo}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

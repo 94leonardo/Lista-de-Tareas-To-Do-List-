@@ -1,9 +1,10 @@
 import React from "react";
 import TodoItem from "./TodoItem";
+import { ListGroup } from "react-bootstrap";
 
 function TodoList({ todos, onToggleComplete, onDelete, onUpdate }) {
   return (
-    <ul className="todo-list">
+    <ListGroup>
       {todos.map((todo, index) => (
         <TodoItem
           key={index}
@@ -13,7 +14,7 @@ function TodoList({ todos, onToggleComplete, onDelete, onUpdate }) {
           onUpdate={(newText) => onUpdate(index, newText)}
         />
       ))}
-    </ul>
+    </ListGroup>
   );
 }
 
