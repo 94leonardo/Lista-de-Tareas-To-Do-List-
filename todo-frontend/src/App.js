@@ -2,35 +2,54 @@ import React, { useState, useEffect } from "react";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import TodoFilter from "./components/TodoFilter";
+import CompletedList from "./components/CompletedList";
 import { Container, Row, Col } from "react-bootstrap";
 
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState([]); // Arreglo de tareas
+  const [todos, setTodos] = useState([]); //Arreglo de tareas
   const [filter, setFilter] = useState("all");
+  const [completedTodos, setCompletedTodos] = useState([]);
 
   // Cargar las tareas desde localStorage al inicio
   useEffect(() => {
     const storedTodos = localStorage.getItem("todos")
       ? JSON.parse(localStorage.getItem("todos"))
       : [];
+    const storedCompleted =
+      JSON.parse(localStorage.getItem("CompleteTodos")) || [];
+    setCompletedTodos(storedCompleted);
     setTodos(storedTodos);
   }, []);
 
   // Guardar las tareas en localStorage cuando cambien
   useEffect(() => {
-    if (todos.length > 0) {
+    if (todos.length > 0 && completedTodos.length > 0) {
       localStorage.setItem("todos", JSON.stringify(todos));
+      localStorage.setItem("CompletedTodos", JSON.stringify(completedTodos));
     }
-  }, [todos]);
+  }, [todos, completedTodos]);
 
   const addTodo = (text) => {
-    setTodos([...todos, { text, completed: false }]);
+    const newTodo = {
+      id: todos.length + 1,
+      text,
+      completed: false,
+      dateCreated: new Date().toLocaleString(), // Fecha de ingreso
+      dateCompleted: null, // Inicialmente null
+    };
+    setTodos([...todos, newTodo]);
   };
 
   const deleteTodo = (index) => {
-    setTodos(todos.filter((_, i) => i !== index));
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    // Reenumerar las tareas después de eliminar
+    const reIndexedTodos = updatedTodos.map((todo, i) => ({
+      ...todo,
+      id: i + 1,
+    }));
+    setTodos(reIndexedTodos);
   };
 
   const toggleCompleted = (index) => {
@@ -45,6 +64,16 @@ function App() {
     setTodos(
       todos.map((todo, i) => (i === index ? { ...todo, text: newText } : todo))
     );
+  };
+
+  const completeTodo = (index) => {
+    const completedTodo = {
+      ...todos[index],
+      completed: true,
+      dateCompleted: new Date().toLocaleString(), // Fecha de completado
+    };
+    setCompletedTodos([...completedTodos, completedTodo]);
+    setTodos(todos.filter((_, i) => i !== index));
   };
 
   const getFilteredTodos = () => {
@@ -70,8 +99,11 @@ function App() {
             onToggleComplete={toggleCompleted}
             onDelete={deleteTodo}
             onUpdate={updateTodo}
+            onComplete={completeTodo}
           />
         </Col>
+        <h2>Completadas</h2>
+        <CompletedList todos={completedTodos} />
       </Row>
     </Container>
   );
