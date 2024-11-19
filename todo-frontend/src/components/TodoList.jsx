@@ -1,20 +1,31 @@
 import React from "react";
 import TodoItem from "./TodoItem";
-import { ListGroup } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
-function TodoList({ todos, onToggleComplete, onDelete, onUpdate }) {
+function TodoList({ todos, onToggleComplete, onDelete, onUpdate, onComplete }) {
   return (
-    <ListGroup>
-      {todos.map((todo, index) => (
-        <TodoItem
-          key={index}
-          todo={todo}
-          onToggleComplete={() => onToggleComplete(index)}
-          onDelete={() => onDelete(index)}
-          onUpdate={(newText) => onUpdate(index, newText)}
-        />
-      ))}
-    </ListGroup>
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tarea</th>
+          <th>Fecha de Ingreso</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((todo, index) => (
+          <TodoItem
+            key={index}
+            todo={todo}
+            onToggleComplete={() => onToggleComplete(index)}
+            onDelete={() => onDelete(index)}
+            onUpdate={(newText) => onUpdate(index, newText)}
+            onComplete={() => onComplete(index)}
+          />
+        ))}
+      </tbody>
+    </Table>
   );
 }
 

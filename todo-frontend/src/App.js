@@ -4,76 +4,67 @@ import TodoList from "./components/TodoList";
 import TodoFilter from "./components/TodoFilter";
 import CompletedList from "./components/CompletedList";
 import { Container, Row, Col } from "react-bootstrap";
-
+import {
+  getTodos,
+  createTodo,
+  deleteTodo as deleteTodoAPI,
+  updateTodo as updateTodoAPI,
+} from "./api/todos";
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState([]); //Arreglo de tareas
+  const [todos, setTodos] = useState([]); // Arreglo de tareas
   const [filter, setFilter] = useState("all");
   const [completedTodos, setCompletedTodos] = useState([]);
 
-  // Cargar las tareas desde localStorage al inicio
+  // Cargar las tareas desde el backend al inicio
   useEffect(() => {
-    const storedTodos = localStorage.getItem("todos")
-      ? JSON.parse(localStorage.getItem("todos"))
-      : [];
-    const storedCompleted =
-      JSON.parse(localStorage.getItem("CompleteTodos")) || [];
-    setCompletedTodos(storedCompleted);
-    setTodos(storedTodos);
+    const fetchTodos = async () => {
+      try {
+        const todos = await getTodos(); // Obtener tareas desde el backend
+        setTodos(todos);
+      } catch (error) {
+        console.error("Error al obtener las tareas:", error);
+      }
+    };
+    fetchTodos();
   }, []);
 
-  // Guardar las tareas en localStorage cuando cambien
-  useEffect(() => {
-    if (todos.length > 0 && completedTodos.length > 0) {
-      localStorage.setItem("todos", JSON.stringify(todos));
-      localStorage.setItem("CompletedTodos", JSON.stringify(completedTodos));
+  const addTodo = async (text, date) => {
+    try {
+      const newTodo = await createTodo({ text, date }); // Crear tarea en el backend
+      setTodos([...todos, newTodo]); // Actualizar estado con la nueva tarea
+    } catch (error) {
+      console.error("Error al agregar la tarea:", error);
     }
-  }, [todos, completedTodos]);
-
-  const addTodo = (text) => {
-    const newTodo = {
-      id: todos.length + 1,
-      text,
-      completed: false,
-      dateCreated: new Date().toLocaleString(), // Fecha de ingreso
-      dateCompleted: null, // Inicialmente null
-    };
-    setTodos([...todos, newTodo]);
   };
 
-  const deleteTodo = (index) => {
-    const updatedTodos = todos.filter((_, i) => i !== index);
-    // Reenumerar las tareas después de eliminar
-    const reIndexedTodos = updatedTodos.map((todo, i) => ({
-      ...todo,
-      id: i + 1,
-    }));
-    setTodos(reIndexedTodos);
+  const deleteTodo = async (id) => {
+    try {
+      await deleteTodoAPI(id); // Eliminar tarea en el backend
+      setTodos(todos.filter((todo) => todo.id !== id)); // Actualizar estado
+    } catch (error) {
+      console.error("Error al eliminar la tarea:", error);
+    }
   };
 
-  const toggleCompleted = (index) => {
+  const updateTodo = async (id, newText) => {
+    try {
+      const updatedTodo = await updateTodoAPI(id, { text: newText }); // Actualizar en backend
+      setTodos(
+        todos.map((todo) => (todo.id === id ? updatedTodo : todo)) // Actualizar estado
+      );
+    } catch (error) {
+      console.error("Error al actualizar la tarea:", error);
+    }
+  };
+
+  const toggleCompleted = (id) => {
     setTodos(
-      todos.map((todo, i) =>
-        i === index ? { ...todo, completed: !todo.completed } : todo
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
-  };
-
-  const updateTodo = (index, newText) => {
-    setTodos(
-      todos.map((todo, i) => (i === index ? { ...todo, text: newText } : todo))
-    );
-  };
-
-  const completeTodo = (index) => {
-    const completedTodo = {
-      ...todos[index],
-      completed: true,
-      dateCompleted: new Date().toLocaleString(), // Fecha de completado
-    };
-    setCompletedTodos([...completedTodos, completedTodo]);
-    setTodos(todos.filter((_, i) => i !== index));
   };
 
   const getFilteredTodos = () => {
@@ -99,7 +90,6 @@ function App() {
             onToggleComplete={toggleCompleted}
             onDelete={deleteTodo}
             onUpdate={updateTodo}
-            onComplete={completeTodo}
           />
         </Col>
         <h2>Completadas</h2>
