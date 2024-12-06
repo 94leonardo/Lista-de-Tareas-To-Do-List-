@@ -33,18 +33,25 @@ exports.createTodo = async (req, res) => {
 // Actualizar una tarea
 exports.updateTodo = async (req, res) => {
   const { id } = req.params;
-  const { text, date } = req.body;
+  const { text, date, completed } = req.body; // Extrae text y date del cuerpo
 
+  // Validar la presencia del ID y al menos un campo para actualizar
   if (!id || (!text && !date)) {
-    return res.status(400).json({ error: "ID, texto o fecha son requeridos" });
+    return res
+      .status(400)
+      .json({ error: "ID y al menos un campo (texto o fecha) son requeridos" });
   }
 
+  // Crear dinámicamente el objeto de actualización
+  const updateFields = {};
+  if (text) updateFields.text = text;
+  if (date) updateFields.date = date;
+  if (completed) updateFields.completed = completed;
+
   try {
-    const updatedTodo = await Todo.findByIdAndUpdate(
-      id,
-      { text, date },
-      { new: true } // `new: true` devuelve el documento actualizado
-    );
+    const updatedTodo = await Todo.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
 
     if (!updatedTodo) {
       return res.status(404).json({ error: "Tarea no encontrada" });
@@ -52,6 +59,7 @@ exports.updateTodo = async (req, res) => {
 
     res.json(updatedTodo);
   } catch (error) {
+    console.error("Error al actualizar la tarea:", error);
     res.status(500).json({ error: "Error al actualizar la tarea" });
   }
 };
@@ -59,6 +67,7 @@ exports.updateTodo = async (req, res) => {
 // Eliminar una tarea
 exports.deleteTodo = async (req, res) => {
   const { id } = req.params;
+  console.log("Id residido es : ", id);
 
   if (!id) {
     return res.status(400).json({ error: "El ID es requerido" });

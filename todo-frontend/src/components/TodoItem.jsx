@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, InputGroup, FormControl } from "react-bootstrap";
 
-function TodoItem({ todo, onToggleComplete, onDelete, onUpdate, onComplete }) {
+function TodoItem({ todo, number, onToggleComplete, onDelete, updateTodo, onComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [newText, setNewText] = useState(todo?.text || ""); // Manejar caso en el que 'todo' sea indefinido
   const [isComplete, setIsComplete] = useState(todo?.completed || false);
@@ -10,17 +10,21 @@ function TodoItem({ todo, onToggleComplete, onDelete, onUpdate, onComplete }) {
     setIsEditing(true);
   };
 
+
   const handleUpdate = () => {
-    if (newText.trim()) {
-      // Validar que el nuevo texto no esté vacío
-      onUpdate(newText);
-      setIsEditing(false);
+    console.log("updateTodo:", updateTodo); // Verifica si updateTodo está definida
+    if (newText.trim() && updateTodo) {
+      updateTodo(todo.id || todo._id, newText); // Llamar a la función de actualización
+      setIsEditing(false); // Salir del modo de edición
+    } else {
+      console.error("updateTodo no está definido o el texto está vacío");
     }
   };
+
   const handleComplete = () => {
     if (onComplete) {
-      onComplete(); //llamar a la funcion On Complete
-      setIsComplete(!isComplete);
+      onComplete(); // Llamada a la función pasada como prop
+      setIsComplete(!isComplete); // Cambiar el estado local
     }
   };
 
@@ -31,7 +35,9 @@ function TodoItem({ todo, onToggleComplete, onDelete, onUpdate, onComplete }) {
 
   return (
     <tr>
-      <td><strong>{todo.id}.</strong></td>
+      <td>
+        <td><strong>{number}.</strong></td> {/* Mostrar número secuencial */}
+      </td>
       <td>
         {isEditing ? (
           <InputGroup>
@@ -51,9 +57,9 @@ function TodoItem({ todo, onToggleComplete, onDelete, onUpdate, onComplete }) {
           </span>
         )}
       </td>
-      
+
       <td>{todo.date}</td>
-     
+
       <td>
         <Button
           variant="outline-primary"

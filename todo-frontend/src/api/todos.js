@@ -28,24 +28,31 @@ export const createTodo = async (todo) => {
 };
 
 // Actualizar una tarea
-export const updateTodo = async (id, updates) => {
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updates),
-  });
-  if (!response.ok) {
-    throw new Error("Error al actualizar la tarea");
+export const updateTodo = async (id, updatedData) => {
+  try {
+    const response = await fetch(`${API_URL}/actualizar/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData), // Convertir el objeto a JSON
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar la tarea");
+    }
+
+    return response.json(); // Devolver la respuesta como JSON
+  } catch (error) {
+    console.error("Error en updateTodo:", error);
+    throw error; // Lanza el error para manejarlo donde se llame
   }
-  return response.json();
 };
 
 // Eliminar una tarea
 export const deleteTodo = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL}/delete/${id}`, {
       method: "DELETE",
     });
 

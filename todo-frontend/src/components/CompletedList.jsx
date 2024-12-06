@@ -9,7 +9,7 @@ function CompletedList({ todos }) {
           key={index}
           style={{ color: "#6c757d" }}
         >
-          {todo.text}
+          <strong>{todo.id || todo._id}.</strong> {todo.text} <em>({todo.dateCompleted})</em>
         </ListGroup.Item>
       ))}
     </ListGroup>

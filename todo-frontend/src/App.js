@@ -42,7 +42,11 @@ function App() {
   const deleteTodo = async (id) => {
     try {
       await deleteTodoAPI(id); // Eliminar tarea en el backend
-      setTodos(todos.filter((todo) => todo.id !== id)); // Actualizar estado
+      //setTodos(todos.filter((todo) => todo.id !== id)); // Actualizar estado
+      setTodos((prevTodos) =>
+        prevTodos.filter((todo) => todo.id !== id && todo._id !== id)
+      ); // Actualiza el estado
+      console.log(todos);
     } catch (error) {
       console.error("Error al eliminar la tarea:", error);
     }
@@ -51,11 +55,16 @@ function App() {
   const updateTodo = async (id, newText) => {
     try {
       const updatedTodo = await updateTodoAPI(id, { text: newText }); // Actualizar en backend
-      setTodos(
-        todos.map((todo) => (todo.id === id ? updatedTodo : todo)) // Actualizar estado
-      );
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo.id === id || todo._id === id ? { ...todo, ...updatedTodo } : todo
+        )
+      ); // Actualizar estado
     } catch (error) {
       console.error("Error al actualizar la tarea:", error);
+      alert(
+        "No se pudo actualizar la tarea. Revisa la consola para más detalles."
+      );
     }
   };
 
@@ -76,6 +85,22 @@ function App() {
     return todos;
   };
 
+  const handleComplete = async (id) => {
+    try {
+      const completedTodo = await updateTodoAPI(id, { completed: true });
+      setTodos((prevTodos) =>
+        prevTodos.filter((todo) =>
+          todo.id !== id && todo._id !== id
+            ? { ...todo, completed: true }
+            : todo
+        )
+      );
+      setCompletedTodos((prevCompleted) => [...prevCompleted, completedTodo]);
+    } catch (error) {
+      console.error("Error al completar la tarea:", error);
+    }
+  };
+
   return (
     <Container className="py-4">
       <Row>
@@ -89,7 +114,8 @@ function App() {
             todos={getFilteredTodos()}
             onToggleComplete={toggleCompleted}
             onDelete={deleteTodo}
-            onUpdate={updateTodo}
+            updateTodo={updateTodo} // Pasar la función desde App.js
+            onComplete={handleComplete} // Pasa la función aquí
           />
         </Col>
         <h2>Completadas</h2>
